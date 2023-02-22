@@ -38,7 +38,10 @@ export default {
 
   methods: {
     addTodo() {
-      this.todos.push(this.todoTitle);
+      this.todos.push({
+        title: this.todoTitle,
+        id: Math.floor(Math.random() * 1000),
+      });
     },
 
     removeTodo(todoTitle) {
