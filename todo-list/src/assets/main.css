@@ -2,20 +2,22 @@
 @import "./normalize.css";
 
 :root {
-    --background-color: #23272e;
-    --text-color: #fff;
-    --navbar-color: #15181c;
-    --accent-color: #41b883;
-    --danger-color: #e06c65;
+  --background-color: #23272e;
+  --text-color: #fff;
+  --navbar-color: #15181c;
+  --accent-color: #41b883;
+  --danger-color: #e06c65;
+  --warning-color: #e5c07b;
+  --info-color: #61afef;
 }
 
 html {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: "Fira Sans", sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: "Fira Sans", sans-serif;
 }
 
 .container {
-    width: 80%;
-    margin: auto;
+  width: 80%;
+  margin: auto;
 }
