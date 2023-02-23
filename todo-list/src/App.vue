@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     addTodo(title) {
-      if (this.title === "") {
+      if (title === "") {
         this.showAlert = true;
         return;
       }
