@@ -2,12 +2,33 @@
   <Navbar />
 
   <main class="container">
+    <Modal :show="editTodoForm.show">
+      <template #header>
+        <h2>Edit Todo</h2>
+      </template>
+
+      <template #content>
+        <form class="edit-todo-form">
+          <label>Todo Title</label>
+          <input type="text" v-model="editTodoForm.todo.title"/>
+        </form>
+      </template>
+
+      <template #footer>
+        <div class="edit-todo-modal-footer">
+          <Btn class="edit-todo-submit-btn" @click="updateTodo">Submit</Btn>
+          <Btn type="danger" @click="editTodoForm.show = false">Close</Btn>
+        </div>
+      </template>
+    </Modal>
+
     <Alert
       message="Todo title is required"
       :show="showAlert"
       @close="showAlert = false"
       type="danger"
     />
+
     <section>
       <AddTodoForm @submit="addTodo" />
     </section>
@@ -18,6 +39,7 @@
         :title="todo.title"
         :key="todo.id"
         @remove="removeTodo(todo.id)"
+        @edit="showEditTodoForm(todo)"
       />
     </section>
   </main>
@@ -26,6 +48,8 @@
 <script>
 import AddTodoForm from "./components/AddTodoForm.vue";
 import Alert from "./components/Alert.vue";
+import Btn from "./components/Btn.vue";
+import Modal from "./components/Modal.vue";
 import Navbar from "./components/Navbar.vue";
 import Todo from "./components/Todo.vue";
 
@@ -35,6 +59,13 @@ export default {
       todoTitle: "",
       todos: [],
       showAlert: false,
+      editTodoForm: {
+        show: false,
+        todo: {
+          id: 0,
+          title: "",
+        }
+      },
     };
   },
   methods: {
@@ -48,10 +79,40 @@ export default {
         id: Math.floor(Math.random() * 1000),
       });
     },
+
+    showEditTodoForm(todo) {
+      this.editTodoForm.show = true;
+      this.editTodoForm.todo = {...todo };
+    },
+
+    updateTodo() {
+      const todo = this.todos.find((todo) => todo.id === this.editTodoForm.todo.id);
+      todo.title = this.editTodoForm.todo.title;
+      this.editTodoForm.show = false;
+    },
+
     removeTodo(id) {
       this.todos = this.todos.filter((todo) => todo.id !== id);
     },
   },
-  components: {Alert, Navbar, AddTodoForm, Todo},
+  components: { Alert, Navbar, AddTodoForm, Todo, Modal, Btn },
 };
 </script>
+
+<style scoped>
+.edit-todo-form > input {
+  width: 100%;
+  height: 30px;
+  border: 1px solid var(--accent-color);
+}
+
+.edit-todo-modal-footer{
+  display: flex;
+  justify-content: end;
+  padding: 10px;
+}
+
+.edit-todo-submit-btn{
+  margin-right: 5px;
+}
+</style>
