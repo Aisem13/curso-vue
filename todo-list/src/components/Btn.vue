@@ -1,5 +1,5 @@
 <template>
-    <button :style="{ backgroundColor }" @click.prevent="$emit('click')" :class="{circle : applyCircleClass}">
+    <button :style="{ backgroundColor }" :class="{circle : applyCircleClass}" v-bind="$attrs">
         <slot/>
     </button>
 </template>
@@ -7,7 +7,7 @@
 <script>
 export default {
     props: {
-        type: {
+        variant: {
             required: false,
             default: "succes",
             valedator(value) {
@@ -33,7 +33,7 @@ computed: {
             secondary: "var(--secondary-color)",
         };
 
-        return options[this.type];
+        return options[this.variant];
     },
 
     applyCircleClass() {
@@ -41,7 +41,6 @@ computed: {
     },
 },
 
-emits: ['click'],
 }
 </script>
 

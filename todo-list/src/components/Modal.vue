@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import { onBeforeMount, onBeforeUnmount } from 'vue';
 
 export default {
     props: {
