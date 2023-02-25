@@ -2,25 +2,7 @@
   <Navbar />
 
   <main class="container">
-    <Modal :show="editTodoForm.show" @close="editTodoForm.show = false">
-      <template #header>
-        <h2>Edit Todo</h2>
-      </template>
-
-      <template #content>
-        <form class="edit-todo-form">
-          <label>Todo Title</label>
-          <input type="text" v-model="editTodoForm.todo.title"/>
-        </form>
-      </template>
-
-      <template #footer>
-        <div class="edit-todo-modal-footer">
-          <Btn class="edit-todo-submit-btn" @click.prevent="updateTodo">Submit</Btn>
-          <Btn variant="danger" @click.prevent="editTodoForm.show = false">Close</Btn>
-        </div>
-      </template>
-    </Modal>
+    <EditTodoForm :show="editTodoForm.show" @close="editTodoForm.show = false" @submit="updateTodo" v-model="editTodoForm.todo.title"/>
 
     <Alert
       :message="alert.message"
@@ -51,11 +33,10 @@
 <script>
 import AddTodoForm from "./components/AddTodoForm.vue";
 import Alert from "./components/Alert.vue";
-import Btn from "./components/Btn.vue";
-import Modal from "./components/Modal.vue";
 import Navbar from "./components/Navbar.vue";
 import Todo from "./components/Todo.vue";
 import Spinner from "./components/Spinner.vue";
+import EditTodoForm from "./components/EditTodoForm.vue";
 import axios from "axios";
 
 export default {
@@ -121,9 +102,16 @@ export default {
       this.editTodoForm.todo = {...todo };
     },
 
-    updateTodo() {
-      const todo = this.todos.find((todo) => todo.id === this.editTodoForm.todo.id);
-      todo.title = this.editTodoForm.todo.title;
+    async updateTodo() {
+      try{
+        const { id, title } = this.editTodoForm.todo;
+        await axios.put(`/api/todos/${id}`, { title })
+        const todo = this.todos.find((todo) => todo.id === this.editTodoForm.todo.id);
+        todo.title = this.editTodoForm.todo.title;
+      }catch (e) {
+        this.showAlert("Failed updating todo");
+      }
+      
       this.editTodoForm.show = false;
     },
 
@@ -132,7 +120,8 @@ export default {
       this.todos = this.todos.filter((todo) => todo.id !== id);
     },
   },
-  components: { Alert, Navbar, AddTodoForm, Todo, Modal, Btn, Spinner },
+
+  components: { Alert, Navbar, AddTodoForm, Todo, Spinner, EditTodoForm },
 };
 </script>
 
@@ -140,20 +129,5 @@ export default {
 .spinner {
   margin: auto;
   margin-top: 30px;
-}
-.edit-todo-form > input {
-  width: 100%;
-  height: 30px;
-  border: 1px solid var(--accent-color);
-}
-
-.edit-todo-modal-footer{
-  display: flex;
-  justify-content: end;
-  padding: 10px;
-}
-
-.edit-todo-submit-btn{
-  margin-right: 5px;
 }
 </style>
