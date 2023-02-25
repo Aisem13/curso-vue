@@ -30,17 +30,20 @@
     />
 
     <section>
-      <AddTodoForm @submit="addTodo" />
+      <AddTodoForm :isLoading="isPostingTodo" @submit="addTodo" />
     </section>
 
     <section>
-      <Todo
-        v-for="todo in todos"
-        :title="todo.title"
-        :key="todo.id"
-        @remove="removeTodo(todo.id)"
-        @edit="showEditTodoForm(todo)"
-      />
+      <Spinner v-if="isLoading" class="spinner"></Spinner>
+        <div v-else>
+          <Todo
+          v-for="todo in todos"
+          :title="todo.title"
+          :key="todo.id"
+          @remove="removeTodo(todo.id)"
+          @edit="showEditTodoForm(todo)"
+        />
+      </div>
     </section>
   </main>
 </template>
@@ -52,6 +55,7 @@ import Btn from "./components/Btn.vue";
 import Modal from "./components/Modal.vue";
 import Navbar from "./components/Navbar.vue";
 import Todo from "./components/Todo.vue";
+import Spinner from "./components/Spinner.vue";
 import axios from "axios";
 
 export default {
@@ -64,6 +68,8 @@ export default {
         message: "",
         type: "danger"
       },
+      isLoading: false,
+      isPostingTodo: false,
       editTodoForm: {
         show: false,
         todo: {
@@ -80,13 +86,14 @@ export default {
 
   methods: {
     async fetchTodos() {
+      this.isLoading = true;
       try{
         const res = await axios.get('http://localhost:8080/todos');
         this.todos = res.data;
       } catch (e) {
-        this.showAlert("Failed loading todos, check your internet connection");
+        this.showAlert("Failed loading todos");
       }
-      
+      this.isLoading = false;
     },
 
     showAlert(message, type = 'danger') {
@@ -100,8 +107,11 @@ export default {
         this.showAlert("Todo tile is required");
         return;
       }
+      this.isPostingTodo = true;
 
       const res = await axios.post('http://localhost:8080/todos', { title });
+
+      this.isPostingTodo = false;
 
       this.todos.push(res.data);
     },
@@ -122,11 +132,15 @@ export default {
       this.todos = this.todos.filter((todo) => todo.id !== id);
     },
   },
-  components: { Alert, Navbar, AddTodoForm, Todo, Modal, Btn },
+  components: { Alert, Navbar, AddTodoForm, Todo, Modal, Btn, Spinner },
 };
 </script>
 
 <style scoped>
+.spinner {
+  margin: auto;
+  margin-top: 30px;
+}
 .edit-todo-form > input {
   width: 100%;
   height: 30px;
