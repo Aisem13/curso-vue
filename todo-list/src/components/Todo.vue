@@ -20,7 +20,7 @@ export default {
     },
   },
   emits: ["remove","edit"],
-  components: { Btn, Pencil, Pencil },
+  components: { Btn, Pencil },
 };
 </script>
 
