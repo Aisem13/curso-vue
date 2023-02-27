@@ -1,44 +1,48 @@
 <template>
   <div v-if="show" class="alert" :style="{backgroundColor}">
     <div>{{ message }}</div>
-    <div @click="$emit('close')" class="close-alert">&times;</div>
+    <div @click="close" class="close-alert">&times;</div>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    message: {
-      required: true,
-      type: String,
-    },
-    show: {
-      required: true,
-      type: Boolean,
-    },
-    variant: {
-      required: false,
-      default: "danger",
-      valedator(value) {
-        return ["danger", "warning", "info"].includes(value);
-      },
+<script setup>
+import { computed } from 'vue';
+
+const props = defineProps({
+  message: {
+    required: true,
+    type: String,
+  },
+  show: {
+    required: true,
+    type: Boolean,
+  },
+  variant: {
+    required: false,
+    default: "danger",
+    valedator(value) {
+      return ["danger", "warning", "info"].includes(value);
     },
   },
+});
 
-  computed: {
-    backgroundColor() {
-      const options = {
-        danger: "var(--danger-color)",
-        info: "var(--info-color)",
-        warning: "var(--warning-color)",
-      };
+const emit = defineEmits(["close"]);
 
-      return options[this.variant];
-    },
-  },
+const backgroundColor = computed(() => {
+  const options = {
+    danger: "var(--danger-color)",
+    info: "var(--info-color)",
+    warning: "var(--warning-color)",
+    succes: "var(--accent-color)",
+    secondary: "var(--secondary-color)",
+  };
 
-  emits: ["close"],
-};
+  return options[props.variant];
+});
+
+function close() {
+  emit('close');
+}
 </script>
 
 <style scoped>
