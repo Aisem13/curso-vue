@@ -6,6 +6,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useBackgroundColor, backgroundColorProps } from '../composables/backgroundColor';
 
 const props = defineProps({
     variant: {
@@ -15,6 +16,7 @@ const props = defineProps({
             const options = ["danger", "warning", "info", "succes", "secondary"];
             return options.includes(value);
         },
+        ...backgroundColorProps,
     },
 
     circle: {
@@ -23,17 +25,7 @@ const props = defineProps({
     },
 });
 
-const backgroundColor = computed(() => {
-    const options = {
-        danger: "var(--danger-color)",
-        info: "var(--info-color)",
-        warning: "var(--warning-color)",
-        succes: "var(--accent-color)",
-        secondary: "var(--secondary-color)",
-    };
-
-    return options[props.variant];
-});
+const backgroundColor = useBackgroundColor(props);
 
 const applyCircleClass = computed(() => {
     return props.circle;
