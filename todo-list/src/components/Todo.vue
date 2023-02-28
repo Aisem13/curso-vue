@@ -2,26 +2,33 @@
   <div class="todo">
     <p>{{ title }}</p>
     <div>
-      <Btn circle variant="secondary" @click.prevent="$emit('edit')" class="btn edit-todo-btn"><Pencil /></Btn>
-      <Btn circle variant="danger" @click.prevent="$emit('remove')" class="btn">&times;</Btn>
+      <Btn circle variant="secondary" @click.prevent="edit" class="btn edit-todo-btn"><Pencil /></Btn>
+      <Btn circle variant="danger" @click.prevent="remove" class="btn">&times;</Btn>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import Btn from "./Btn.vue";
 import Pencil from "./icons/Pencil.vue";
 
-export default {
-  props: {
-    title: {
-      required: true,
-      type: String,
-    },
+const props = defineProps({
+  title: {
+    required: true,
+    type: String,
   },
-  emits: ["remove","edit"],
-  components: { Btn, Pencil },
-};
+});
+
+const emit = defineEmits(["remove","edit"]);
+
+function remove() {
+  emit('remove');
+}
+
+function edit() {
+  emit('edit');
+}
+
 </script>
 
 <style scoped>

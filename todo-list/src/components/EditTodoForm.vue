@@ -9,29 +9,37 @@
         <div>
           <label>Todo Title</label>
         </div>
-        <input type="text" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)"/>
+        <input type="text" :value="modelValue" @input="update($event.target.value)"/>
       </form>
     </template>
 
     <template #footer>
       <div class="edit-todo-modal-footer">
-        <Btn class="edit-todo-submit-btn" @click="$emit('submit')">Submit</Btn>
-        <Btn variant="danger" @click="$emit('close')">Close</Btn>
+        <Btn class="edit-todo-submit-btn" @click="submit">Submit</Btn>
+        <Btn variant="danger" @click="close">Close</Btn>
       </div>
     </template>
   </Modal>
 </template>
 
-<script>
+<script setup>
 import Btn from './Btn.vue';
 import Modal from './Modal.vue';
 
-export default{
-    components: { Modal, Btn },
+const props = defineProps(['modelValue', 'show']);
 
-    props: ['modelValue', 'show'],
+const emit = defineEmits(['close', 'submit', 'update:modelValue']);
 
-    emits: ['close', 'submit', 'update:modelValue']
+function close() {
+  emit('close');
+}
+
+function submit() {
+  emit('submit');
+}
+
+function update(value) {
+  emit('update:modelValue', value);
 }
 </script>
 
