@@ -40,12 +40,10 @@
   import axios from "axios";
   import { ref, reactive, watch } from "vue";
   import { useFetch } from "./composables/fetch";
+  import { useAlert } from "./composables/alert";
 
-  const alert = reactive({
-    show: false,
-    message: "",
-    variant: "danger",
-  });
+  const { alert, showAlert } = useAlert();
+
   const isPostingTodo = ref(false);
   const editTodoForm = reactive({
     show: false,
@@ -58,12 +56,6 @@
   const { data: todos, isLoading } = useFetch("/api/todos", {
     onError: () => showAlert("Failed loading todos")
   });
-
-  function showAlert(message, variant = 'danger') {
-    alert.show = true;
-    alert.message = message;
-    alert.variant = variant;
-  }
 
   function showEditTodoForm(todo) {
     editTodoForm.show = true;
