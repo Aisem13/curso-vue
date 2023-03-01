@@ -38,15 +38,14 @@
   import Spinner from "./components/Spinner.vue";
   import EditTodoForm from "./components/EditTodoForm.vue";
   import axios from "axios";
-  import { ref, reactive } from "vue";
+  import { ref, reactive, watch } from "vue";
+  import { useFetch } from "./composables/fetch";
 
-  const todos = ref([]);
   const alert = reactive({
     show: false,
     message: "",
     variant: "danger",
   });
-  const isLoading = ref(false);
   const isPostingTodo = ref(false);
   const editTodoForm = reactive({
     show: false,
@@ -54,6 +53,10 @@
       id: 0,
       title: "",
     }
+  });
+
+  const { data: todos, isLoading } = useFetch("/api/todos", {
+    onError: () => showAlert("Failed loading todos")
   });
 
   function showAlert(message, variant = 'danger') {
@@ -65,17 +68,6 @@
   function showEditTodoForm(todo) {
     editTodoForm.show = true;
     editTodoForm.todo = {...todo };
-  }
-
-  async function fetchTodos() {
-    isLoading.value = true;
-    try{
-      const res = await axios.get('/api/todos');
-      todos.value = res.data;
-    } catch (e) {
-      showAlert("Failed loading todos");
-    }
-    isLoading.value = false;
   }
 
   async function addTodo(title) {
@@ -106,8 +98,6 @@
     await axios.delete(`/api/todos/${id}`);
     todos.value = todos.value.filter((todo) => todo.id !== id);
   }
-
-  fetchTodos();
 </script>
 
 <style scoped>
