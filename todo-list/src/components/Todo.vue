@@ -1,6 +1,8 @@
 <template>
   <div class="todo">
     <p>{{ title }}</p>
+    <P>{{ description }}</P>
+    <P>{{ date }}</P>
     <div>
       <Btn circle variant="secondary" @click.prevent="edit" class="btn edit-todo-btn"><Pencil /></Btn>
       <Btn circle variant="danger" @click.prevent="remove" class="btn">&times;</Btn>
@@ -14,6 +16,14 @@ import Pencil from "./icons/Pencil.vue";
 
 const props = defineProps({
   title: {
+    required: true,
+    type: String,
+  },
+  description: {
+    required: true,
+    type: String,
+  },
+  date: {
     required: true,
     type: String,
   },

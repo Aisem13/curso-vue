@@ -1,24 +1,22 @@
 <template>
   <Spinner class="spinner" v-if="isLoading" />
 
-  <Alert
-    variant="danger"
-    :message="alert.message"
-    :show="alert.show"
-  />
+  <Alert variant="danger" :message="alert.message" :show="alert.show" />
 
   <div v-if="todo !== null" class="form">
     <h1>Edit Todo</h1>
     <form class="edit-todo-form">
-      <div>
-        <label>Todo Title</label>
-      </div>
+      <label>Todo Title</label>
       <input type="text" v-model="todo.title" />
+      <label>Todo Description</label>
+      <input type="text" v-model="todo.description" />
+      <label>Todo Date</label>
+      <input type="date" v-model="todo.date" />
     </form>
     <div class="submit">
       <Btn :disabled="isUpdatingTodo" @click="submit">
-      <Spinner v-if="isUpdatingTodo"/>
-      <span v-else>Submit</span>
+        <Spinner v-if="isUpdatingTodo" />
+        <span v-else>Submit</span>
       </Btn>
     </div>
   </div>
@@ -43,15 +41,15 @@ const router = useRouter();
 const { data: todo, isLoading } = useFetch(`/api/todos/${props.id}`, {
   onError: () => {
     alert.show = true;
-    alert.message = "Failed loading todos"
-  }
+    alert.message = "Failed loading todos";
+  },
 });
 
 async function submit() {
   isUpdatingTodo.value = true;
   try {
     await axios.put(`/api/todos/${props.id}`, todo.value);
-    router.push('/');
+    router.push("/");
   } catch (e) {
     alert.show = true;
     alert.message = "Failed updating todo";
@@ -70,6 +68,7 @@ async function submit() {
   width: 100%;
   height: 30px;
   border: 1px solid var(--accent-color);
+  margin-bottom: 20px;
 }
 
 .edit-todo-modal-footer {

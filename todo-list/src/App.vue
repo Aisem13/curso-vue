@@ -2,7 +2,7 @@
 <Navbar />
 
 <main class="container">
-  <RouterView />
+  <RouterView/>
 </main>
 </template>
 
