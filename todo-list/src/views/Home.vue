@@ -1,11 +1,4 @@
 <template>
-  <EditTodoForm
-    :show="editTodoForm.show"
-    @close="editTodoForm.show = false"
-    @submit="updateTodo"
-    v-model="editTodoForm.todo.title"
-  />
-
   <Alert
     :message="alert.message"
     :show="alert.show"
@@ -25,7 +18,7 @@
         :title="todo.title"
         :key="todo.id"
         @remove="removeTodo(todo.id)"
-        @edit="showEditTodoForm(todo)"
+        @edit="$router.push(`/todos/${todo.id}/edit`)"
       />
     </div>
   </section>
@@ -36,7 +29,6 @@ import AddTodoForm from "@/components/AddTodoForm.vue";
 import Alert from "@/components/Alert.vue";
 import Todo from "@/components/Todo.vue";
 import Spinner from "@/components/Spinner.vue";
-import EditTodoForm from "@/components/EditTodoForm.vue";
 import axios from "axios";
 import { ref, reactive } from "vue";
 import { useFetch } from "@/composables/fetch";
@@ -57,11 +49,6 @@ const { data: todos, isLoading } = useFetch("/api/todos", {
   onError: () => showAlert("Failed loading todos"),
 });
 
-function showEditTodoForm(todo) {
-  editTodoForm.show = true;
-  editTodoForm.todo = { ...todo };
-}
-
 async function addTodo(title) {
   if (title === "") {
     showAlert("Todo tile is required");
@@ -71,19 +58,6 @@ async function addTodo(title) {
   const res = await axios.post("/api/todos", { title });
   isPostingTodo.value = false;
   todos.value.push(res.data);
-}
-
-async function updateTodo() {
-  try {
-    const { id, title } = editTodoForm.todo;
-    await axios.put(`/api/todos/${id}`, { title });
-    const todo = todos.value.find((todo) => todo.id === editTodoForm.todo.id);
-    todo.title = editTodoForm.todo.title;
-  } catch (e) {
-    showAlert("Failed updating todo");
-  }
-
-  editTodoForm.show = false;
 }
 
 async function removeTodo(id) {

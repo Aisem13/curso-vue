@@ -20,7 +20,7 @@
   align-items: center;
   justify-content: space-between;
   background-color: var(--navbar-color);
-  padding: 20px;
+  padding: 10px;
   margin-bottom: 30px;
 }
 
@@ -33,11 +33,16 @@
   align-items: center;
 }
 
+.links {
+  margin-top: 20px;
+}
+
 .links ul {
   display: flex;
   align-items: center;
   padding: 20px;
   list-style: none;
+  margin: 0;
 }
 
 .links a {
